@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.RecyclerView
+        android:orientation="vertical"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="460dp">
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainactivity_edittext_message"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainactivity_button_send"
+            android:text="전송"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

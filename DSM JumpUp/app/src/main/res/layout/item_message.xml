@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_margin="5dp"
+        android:background="@drawable/ic_account_circle_black_24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:id="@+id/itemmessage_imageview_profile"/>
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:textColor="#000000"
+        app:layout_constraintStart_toEndOf="@id/itemmessage_imageview_profile"
+        android:text="Message"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemmessage_textview_message"/>
+    <TextView
+        android:layout_marginLeft="5dp"
+        app:layout_constraintStart_toEndOf="@id/itemmessage_imageview_profile"
+        app:layout_constraintTop_toBottomOf="@id/itemmessage_textview_message"
+        android:text="name"
+        android:textSize="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemmessage_textview_name"/>
+
+</android.support.constraint.ConstraintLayout>
