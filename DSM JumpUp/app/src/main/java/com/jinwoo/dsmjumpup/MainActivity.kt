@@ -1,20 +1,17 @@
 package com.jinwoo.dsmjumpup
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -25,14 +22,12 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.jinwoo.dsmjumpup.model.ChatMessageModel
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity() {
 
     private val MESSAGE_CHILD = "message"
 
-    private lateinit var send_button: Button
-    private lateinit var mMessageEditText: EditText
-    private lateinit var mRecyclerView: RecyclerView
     private lateinit var mGoogleApiClient: GoogleSignInClient
 
     private lateinit var mFirebaseDatabase: FirebaseDatabase
@@ -46,13 +41,11 @@ class MainActivity: AppCompatActivity() {
 
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<ChatMessageModel, MessageViewHolder>
 
+    private lateinit var mCurrentUid: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mRecyclerView = findViewById(R.id.recyclerView)
-        send_button = findViewById(R.id.mainactivity_button_send)
-        mMessageEditText = findViewById(R.id.mainactivity_edittext_message)
 
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         mDatabaseReference = mFirebaseDatabase.getReference(MESSAGE_CHILD)
@@ -67,6 +60,8 @@ class MainActivity: AppCompatActivity() {
         mFirebaseAuth = FirebaseAuth.getInstance()
         mFirebaseUser = mFirebaseAuth.currentUser!!
 
+        mCurrentUid = mFirebaseUser.uid
+
         mFirebaseDatabase = FirebaseDatabase.getInstance()
         mDatabaseReference = mFirebaseDatabase.getReference()
 
@@ -75,15 +70,15 @@ class MainActivity: AppCompatActivity() {
             mPhotoUrl = mFirebaseUser.photoUrl.toString()
         }
 
-        send_button.setOnClickListener {
-            var chatMessage = ChatMessageModel(mMessageEditText.text.toString(), mUserName, mPhotoUrl)
+        activity_button_send.setOnClickListener {
+            var chatMessage = ChatMessageModel(mUserName, activity_edittext_message.text.toString(), mPhotoUrl, mCurrentUid)
             mDatabaseReference.child(MESSAGE_CHILD).push().setValue(chatMessage)
-            mMessageEditText.setText("")
+            activity_edittext_message.setText("")
         }
 
         var query = mDatabaseReference.child(MESSAGE_CHILD)
 
-        val options = FirebaseRecyclerOptions.Builder<ChatMessageModel>()
+        var options = FirebaseRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(query, ChatMessageModel::class.java)
                 .setLifecycleOwner(this)
                 .build()
@@ -95,65 +90,83 @@ class MainActivity: AppCompatActivity() {
                 return MessageViewHolder(view)
             }
 
-            protected override fun onBindViewHolder(holder: MessageViewHolder, position: Int, model: ChatMessageModel) {
+            override fun onBindViewHolder(holder: MessageViewHolder, position: Int, model: ChatMessageModel) {
                 holder.messageTextView.setText(model.message)
                 holder.nameTextView.setText(model.name)
 
-                if (model.photoUrl == null) {
-                    holder.profileImageView.setImageDrawable(ContextCompat.getDrawable(this@MainActivity,
-                            R.drawable.ic_account_circle_black_24dp))
+                if(model.uid != null && model.uid.equals(mCurrentUid)) {
+                    holder.profileImageView.visibility = View.GONE
+                    holder.nameTextView.visibility = View.GONE
+
+                    holder.messageTextView.setBackgroundResource(R.drawable.rightbubble)
+
+                    holder.linearlayout.gravity = Gravity.RIGHT
                 } else {
-                    Glide.with(this@MainActivity).load(model.photoUrl).into(holder.profileImageView)
+                    holder.profileImageView.visibility = View.VISIBLE
+
+                    if (model.photoUrl == null) {
+                        holder.profileImageView.setImageDrawable(ContextCompat.getDrawable(this@MainActivity,
+                                R.drawable.ic_account_circle_black_24dp))
+                    } else {
+                        Glide.with(this@MainActivity).load(model.photoUrl).into(holder.profileImageView)
+                    }
+
+                    holder.messageTextView.setBackgroundResource(R.drawable.leftbubble)
+
+                    holder.nameTextView.visibility = View.VISIBLE
+                    holder.nameTextView.setText(model.name)
+
+                    holder.linearlayout.gravity = Gravity.LEFT
                 }
             }
         }
-        mRecyclerView.setLayoutManager(LinearLayoutManager(this))
-        mRecyclerView.setAdapter(mFirebaseAdapter)
+        recyclerView.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.setAdapter(mFirebaseAdapter)
 
         mFirebaseAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
 
                 var messageCount = mFirebaseAdapter.itemCount
-                var layoutManager: LinearLayoutManager = mRecyclerView.layoutManager as LinearLayoutManager
+                var layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
                 var lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition()
 
                 if (lastVisiblePosition == -1 ||
                         (positionStart >= (messageCount - 1) &&
                                 lastVisiblePosition == (positionStart - 1))) {
-                    mRecyclerView.scrollToPosition(positionStart)
+                    recyclerView.scrollToPosition(positionStart)
                 }
             }
         })
 
-        mRecyclerView.addOnLayoutChangeListener(View.OnLayoutChangeListener {
+        recyclerView.addOnLayoutChangeListener{
             v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (bottom < oldBottom) {
                 v.postDelayed({
-                    kotlin.run { mRecyclerView.smoothScrollToPosition(mFirebaseAdapter.itemCount) }
+                    kotlin.run { recyclerView.smoothScrollToPosition(mFirebaseAdapter.itemCount) }
                 },100)
             }
-        })
+        }
     }
 
     override fun onStart() {
         super.onStart()
-
         mFirebaseAdapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-
         mFirebaseAdapter.stopListening()
     }
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var linearlayout: LinearLayout
         var profileImageView: CircleImageView
         var messageTextView: TextView
         var nameTextView: TextView
 
         init {
+            linearlayout =  itemView.findViewById(R.id.linearlayout)
             profileImageView = itemView.findViewById(R.id.itemmessage_imageview_profile)
             messageTextView = itemView.findViewById(R.id.itemmessage_textview_message)
             nameTextView = itemView.findViewById(R.id.itemmessage_textview_name)

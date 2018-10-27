@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_margin="5dp"
-        android:background="@drawable/ic_account_circle_black_24dp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:id="@+id/itemmessage_imageview_profile"/>
-    <TextView
-        android:layout_marginLeft="5dp"
-        android:textColor="#000000"
-        app:layout_constraintStart_toEndOf="@id/itemmessage_imageview_profile"
-        android:text="Message"
-        android:textStyle="bold"
-        android:textSize="16dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/itemmessage_textview_message"/>
-    <TextView
-        android:layout_marginLeft="5dp"
-        app:layout_constraintStart_toEndOf="@id/itemmessage_imageview_profile"
-        app:layout_constraintTop_toBottomOf="@id/itemmessage_textview_message"
-        android:text="name"
-        android:textSize="12dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/itemmessage_textview_name"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
+        android:id="@+id/linearlayout">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_margin="5dp"
+            android:background="@drawable/ic_account_circle_black_24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/itemmessage_imageview_profile"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:textColor="#000000"
+            android:text="Message"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemmessage_textview_message"/>
+        <TextView
+            android:text="name"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemmessage_textview_name"/>
+        </LinearLayout>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

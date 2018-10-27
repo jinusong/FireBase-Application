@@ -15,6 +15,9 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 
 class SignInActivity : AppCompatActivity() {
@@ -22,23 +25,20 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var mAuth :FirebaseAuth
     private lateinit var mGoogleApiClient: GoogleSignInClient
     private val RC_SIGN_IN = 1000
-    lateinit var sign_in_btn: SignInButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        sign_in_btn = findViewById(R.id.sign_in)
-
         mAuth = FirebaseAuth.getInstance()
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 
         mGoogleApiClient = GoogleSignIn.getClient(this@SignInActivity, gso)
 
-        sign_in_btn.setOnClickListener { v ->
+        sign_in_btn.setOnClickListener {
             var signinIntent = mGoogleApiClient.signInIntent
             startActivityForResult(signinIntent, RC_SIGN_IN)
         }
@@ -46,6 +46,7 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if(requestCode == RC_SIGN_IN) {
             var result: GoogleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
 
@@ -53,7 +54,7 @@ class SignInActivity : AppCompatActivity() {
                 var account: GoogleSignInAccount = result.signInAccount!!
                 firebaseAuthWithGoogle(account)
             } else {
-                Toast.makeText(this, "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                toast( "로그인에 실패하였습니다.")
             }
         }
     }
@@ -61,9 +62,9 @@ class SignInActivity : AppCompatActivity() {
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
         var credential: AuthCredential = GoogleAuthProvider.getCredential(account.idToken,null)
 
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, OnCompleteListener { task: Task<AuthResult> ->
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, OnCompleteListener { task ->
             if(!task.isSuccessful) {
-                Toast.makeText(this@SignInActivity, "Authentication 연동", Toast.LENGTH_SHORT).show()
+                toast("Authentication 연동")
             } else {
                 goMainAcitivty()
             }
@@ -71,8 +72,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun goMainAcitivty() {
-        var intent = Intent(this@SignInActivity, MainActivity::class.java)
-        startActivity(intent)
+        startActivity<MainActivity>()
         finish()
     }
 }
