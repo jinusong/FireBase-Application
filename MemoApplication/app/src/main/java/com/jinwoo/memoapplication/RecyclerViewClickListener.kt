@@ -1,6 +1,6 @@
 package com.jinwoo.memoapplication
 
-import com.jinwoo.memoapplication.model.MemoModel
+import com.jinwoo.memoapplication.Model.MemoModel
 
 interface RecyclerViewClickListener{
     fun onItemClicked(position: Int, memo: MemoModel, key: String)
