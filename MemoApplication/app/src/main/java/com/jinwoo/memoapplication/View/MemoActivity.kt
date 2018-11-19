@@ -25,11 +25,8 @@ class MemoActivity:AppCompatActivity(), MemoContract.MemoView {
         memoPresenter.mDatabaseReference = FirebaseDatabase.getInstance().getReference()
 
         memo_btn_save.setOnClickListener {
-            memoPresenter.title = memo_title.text.toString()
-            memoPresenter.content = memo_content.text.toString()
-
-            memoPresenter.sendData()
-            memoPresenter.SaveMemo(mMemoKey, this, resources)
+            memoPresenter.sendData(memo_title.text.toString(), memo_content.text.toString())
+            memoPresenter.keyNullCheck(mMemoKey, this)
         }
     }
 

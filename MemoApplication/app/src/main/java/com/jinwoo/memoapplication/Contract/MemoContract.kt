@@ -16,10 +16,10 @@ interface MemoContract{
         var view: MemoView
         var model: MemoModel
         var mDatabaseReference: DatabaseReference
-        var title: String
-        var content: String
 
-        fun sendData()
-        fun SaveMemo(MemoKey: String?, context: Context,resources: Resources)
+        fun sendData(title: String, content: String)
+        fun keyNullCheck(MemoKey: String?, context: Context)
+        fun SaveMemo(context: Context)
+        fun UpdateMemo(MemoKey: String?)
     }
 }

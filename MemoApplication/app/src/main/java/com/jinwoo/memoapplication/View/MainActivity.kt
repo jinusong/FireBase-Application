@@ -28,18 +28,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         recyclerView.adapter = mainPresenter.initData(resources)
 
         main_fab_add.setOnClickListener { startActivity<MemoActivity>() }
-
-        mainPresenter.mAdapter.setOnClickListener(object: RecyclerViewClickListener {
-
-            override fun onItemClicked(position: Int, memo: MemoModel, key: String) {
-                startActivity<MemoActivity>("memokey" to key,
-                        "title" to memo.title, "contents" to memo.contents)
-            }
-
-            override fun onItemLongClicked(position: Int, memo: MemoModel, key: String) {
-                createAlert(key).show()
-            }
-        })
     }
 
     override fun createAlert(key: String) =
@@ -49,4 +37,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
             }
             negativeButton("취소") { null }
         }
+
+    override fun enterMemo(memo: MemoModel, key: String){
+        startActivity<MemoActivity>("memokey" to key,
+                "title" to memo.title, "contents" to memo.contents)
+    }
 }
