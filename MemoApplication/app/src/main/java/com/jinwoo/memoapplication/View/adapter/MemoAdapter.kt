@@ -1,4 +1,4 @@
-package com.jinwoo.memoapplication.Model.adapter
+package com.jinwoo.memoapplication.View.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

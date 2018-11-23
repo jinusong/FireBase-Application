@@ -34,10 +34,10 @@ class MemoPresenter(view: MemoContract.MemoView) : MemoContract.MemoPresenter{
     }
 
     override fun keyNullCheck(MemoKey: String?, context: Context) =
-        if(MemoKey == null) SaveMemo(context)
+        if(MemoKey == null) SaveMemo()
         else UpdateMemo(MemoKey)
 
-    override fun SaveMemo(context: Context) {
+    override fun SaveMemo() {
         if (TextUtils.isEmpty(title)) {
             view.notifyError(REQUIRED_TITLE)
             return
@@ -48,17 +48,17 @@ class MemoPresenter(view: MemoContract.MemoView) : MemoContract.MemoPresenter{
         }
         mDatabaseReference.child("notes")
                 .push().setValue(model).addOnSuccessListener {
-                    Toast.makeText(context, "저장완료", Toast.LENGTH_SHORT).show()
+                    view.notifyToast("저장 성공")
                 }.addOnFailureListener {
-                    Toast.makeText(context, "저장실패", Toast.LENGTH_SHORT).show()
+                    view.notifyToast("저장 실패")
                 }
-        view.notifyfinish()
+        view.notifyFinish()
     }
 
     override fun UpdateMemo(MemoKey: String?) {
         var path = "notes/$MemoKey/"
         var childUpdates: Map<String, Any?> = model.toMap(path)
         mDatabaseReference.updateChildren(childUpdates)
-        view.notifyfinish()
+        view.notifyFinish()
     }
 }

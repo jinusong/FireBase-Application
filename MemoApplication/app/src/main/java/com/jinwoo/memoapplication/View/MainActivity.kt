@@ -2,6 +2,8 @@ package com.jinwoo.memoapplication.View
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.jinwoo.memoapplication.Contract.MainContract
 import com.jinwoo.memoapplication.Presenter.MainPresenter
@@ -21,12 +23,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerView = findViewById(R.id.recycler_list)
-        recyclerView = mainPresenter.setRecyclerView(recyclerView, this)
-        recyclerView.adapter = mainPresenter.getAdapter()
-
+        createRecyclerView()
         listClickListener()
-
         main_fab_add.setOnClickListener { startActivity<MemoActivity>() }
     }
 
@@ -51,4 +49,12 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
                 mainPresenter.view.createAlert(key).show()
             }
         })
+
+    override fun createRecyclerView(){
+        recyclerView = findViewById(R.id.recycler_list)
+        var decoration = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
+        recyclerView.addItemDecoration(decoration)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = mainPresenter.getAdapter()
+    }
 }

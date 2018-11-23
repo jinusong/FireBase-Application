@@ -8,6 +8,7 @@ import com.jinwoo.memoapplication.Contract.MemoContract
 import com.jinwoo.memoapplication.Presenter.MemoPresenter
 import com.jinwoo.memoapplication.R
 import kotlinx.android.synthetic.main.activity_memo.*
+import org.jetbrains.anko.toast
 import org.koin.android.ext.android.inject
 
 class MemoActivity:AppCompatActivity(), MemoContract.MemoView {
@@ -27,7 +28,9 @@ class MemoActivity:AppCompatActivity(), MemoContract.MemoView {
         }
     }
 
-    override fun notifyfinish() = finish()
+    override fun notifyFinish() = finish()
+
+    override fun notifyToast(text: String) = toast(text)
 
     override fun notifyError(error: String) = memo_title.setError(error)
 

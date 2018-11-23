@@ -2,16 +2,18 @@ package com.jinwoo.memoapplication.Contract
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import com.google.firebase.database.DatabaseReference
 import com.jinwoo.memoapplication.Model.MemoModel
 
 interface MemoContract{
+
     interface MemoView{
-        fun notifyfinish()
+        fun notifyFinish()
         fun notifyError(error: String)
         fun setMemo(intent: Intent)
+        fun notifyToast(text: String)
     }
+
     interface MemoPresenter{
         val view: MemoView
         var model: MemoModel
@@ -19,7 +21,8 @@ interface MemoContract{
 
         fun sendData(title: String, content: String)
         fun keyNullCheck(MemoKey: String?, context: Context)
-        fun SaveMemo(context: Context)
+        fun SaveMemo()
         fun UpdateMemo(MemoKey: String?)
     }
+
 }
