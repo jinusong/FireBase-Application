@@ -11,7 +11,6 @@ import com.jinwoo.memoapplication.RecyclerViewClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
-import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), MainContract.MainView {
 
@@ -39,12 +38,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
             negativeButton("취소") { null }
         }
 
-    override fun enterMemo(memo: MemoModel, key: String){
+    override fun enterMemo(memo: MemoModel, key: String) =
         startActivity<MemoActivity>("memokey" to key,
                 "title" to memo.title, "contents" to memo.contents)
-    }
 
-    override fun listClickListener() {
+    override fun listClickListener() =
         mainPresenter.mAdapter.setOnClickListener(object: RecyclerViewClickListener {
             override fun onItemClicked(position: Int, memo: MemoModel, key: String) {
                 mainPresenter.view.enterMemo(memo, key)
@@ -53,5 +51,4 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
                 mainPresenter.view.createAlert(key).show()
             }
         })
-    }
 }

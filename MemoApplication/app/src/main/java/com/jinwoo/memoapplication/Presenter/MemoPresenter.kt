@@ -33,10 +33,9 @@ class MemoPresenter(view: MemoContract.MemoView) : MemoContract.MemoPresenter{
         model = MemoModel(title, content, dateFormat.format(Date()))
     }
 
-    override fun keyNullCheck(MemoKey: String?, context: Context) {
+    override fun keyNullCheck(MemoKey: String?, context: Context) =
         if(MemoKey == null) SaveMemo(context)
         else UpdateMemo(MemoKey)
-    }
 
     override fun SaveMemo(context: Context) {
         if (TextUtils.isEmpty(title)) {
