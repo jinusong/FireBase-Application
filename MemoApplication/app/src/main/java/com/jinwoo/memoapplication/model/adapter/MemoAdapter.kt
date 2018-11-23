@@ -53,7 +53,7 @@ class MemoAdapter(ref: DatabaseReference): RecyclerView.Adapter<MemoViewHolder>(
         holder.titleTextView.setText(memo.title)
         holder.dateTextView.setText(memo.date)
         var key: String = mMemoIds.get(position)
-        mListener?.let {
+        if(mListener != null){
             val pos = position
             val memoModel: MemoModel = memo
             val memoKey: String = key

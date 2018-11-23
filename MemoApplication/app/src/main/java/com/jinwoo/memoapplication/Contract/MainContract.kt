@@ -12,14 +12,14 @@ interface MainContract{
     interface MainView{
         fun createAlert(key: String): AlertBuilder<android.app.AlertDialog>
         fun enterMemo(memo: MemoModel, key: String)
+        fun listClickListener()
     }
     interface MainPresenter{
-        var view: MainView
-        var mDatabaseReference: DatabaseReference
-        var mAdapter: MemoAdapter
+        val view: MainView
+        val mAdapter: MemoAdapter
+        val mDatabaseReference: DatabaseReference
 
         fun setRecyclerView(recyclerView: RecyclerView, context: Context): RecyclerView
-        fun initData(resources: Resources): MemoAdapter
-        fun listClickListener()
+        fun getAdapter(): MemoAdapter
     }
 }

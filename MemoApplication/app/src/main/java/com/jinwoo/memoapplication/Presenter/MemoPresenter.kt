@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.widget.Toast
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.jinwoo.memoapplication.Contract.MemoContract
 import com.jinwoo.memoapplication.Model.MemoModel
 import java.text.SimpleDateFormat
@@ -11,9 +12,9 @@ import java.util.*
 
 class MemoPresenter(view: MemoContract.MemoView) : MemoContract.MemoPresenter{
 
-    override lateinit var view: MemoContract.MemoView
+    override val view: MemoContract.MemoView
     override lateinit var model: MemoModel
-    override lateinit var mDatabaseReference: DatabaseReference
+    override val mDatabaseReference: DatabaseReference by lazy { FirebaseDatabase.getInstance().getReference() }
 
     private lateinit var title: String
     private lateinit var content: String
@@ -56,7 +57,7 @@ class MemoPresenter(view: MemoContract.MemoView) : MemoContract.MemoPresenter{
     }
 
     override fun UpdateMemo(MemoKey: String?) {
-        var path: String = "notes/$MemoKey/"
+        var path = "notes/$MemoKey/"
         var childUpdates: Map<String, Any?> = model.toMap(path)
         mDatabaseReference.updateChildren(childUpdates)
         view.notifyfinish()

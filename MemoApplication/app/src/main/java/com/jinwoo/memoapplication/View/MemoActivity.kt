@@ -8,21 +8,18 @@ import com.jinwoo.memoapplication.Contract.MemoContract
 import com.jinwoo.memoapplication.Presenter.MemoPresenter
 import com.jinwoo.memoapplication.R
 import kotlinx.android.synthetic.main.activity_memo.*
+import org.koin.android.ext.android.inject
 
 class MemoActivity:AppCompatActivity(), MemoContract.MemoView {
 
-    lateinit var memoPresenter: MemoContract.MemoPresenter
+    val memoPresenter: MemoPresenter by lazy { MemoPresenter(this) }
     var mMemoKey: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memo)
 
-        memoPresenter = MemoPresenter(this)
-
         intent?.let{ setMemo(intent) }
-
-        memoPresenter.mDatabaseReference = FirebaseDatabase.getInstance().getReference()
 
         memo_btn_save.setOnClickListener {
             memoPresenter.sendData(memo_title.text.toString(), memo_content.text.toString())

@@ -11,21 +11,22 @@ import com.jinwoo.memoapplication.RecyclerViewClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), MainContract.MainView {
 
-    lateinit var mainPresenter: MainContract.MainPresenter
+    val mainPresenter: MainPresenter by lazy { MainPresenter(this)}
     lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainPresenter = MainPresenter(this)
-
         recyclerView = findViewById(R.id.recycler_list)
         recyclerView = mainPresenter.setRecyclerView(recyclerView, this)
-        recyclerView.adapter = mainPresenter.initData(resources)
+        recyclerView.adapter = mainPresenter.getAdapter()
+
+        listClickListener()
 
         main_fab_add.setOnClickListener { startActivity<MemoActivity>() }
     }
@@ -41,5 +42,16 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     override fun enterMemo(memo: MemoModel, key: String){
         startActivity<MemoActivity>("memokey" to key,
                 "title" to memo.title, "contents" to memo.contents)
+    }
+
+    override fun listClickListener() {
+        mainPresenter.mAdapter.setOnClickListener(object: RecyclerViewClickListener {
+            override fun onItemClicked(position: Int, memo: MemoModel, key: String) {
+                mainPresenter.view.enterMemo(memo, key)
+            }
+            override fun onItemLongClicked(position: Int, memo: MemoModel, key: String) {
+                mainPresenter.view.createAlert(key).show()
+            }
+        })
     }
 }

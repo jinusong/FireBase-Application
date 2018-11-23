@@ -13,9 +13,9 @@ interface MemoContract{
         fun setMemo(intent: Intent)
     }
     interface MemoPresenter{
-        var view: MemoView
+        val view: MemoView
         var model: MemoModel
-        var mDatabaseReference: DatabaseReference
+        val mDatabaseReference: DatabaseReference
 
         fun sendData(title: String, content: String)
         fun keyNullCheck(MemoKey: String?, context: Context)
