@@ -9,3 +9,4 @@ DSM 3rd JumpUp Project
 * Firebase의 RealTimeDatabase를 이용한 메모장 어플입니다.
 * Firebase의 가이드라인에 나와있는 Firebase UI가 아닌 직접 인터페이스와 클래스를 구현하였습니다.
 * 이 외에도 언어는 Kotlin을 사용하였고, Kotlin Android Extension 등의 라이브러리를 사용하였습니다.
+* 유지보수를 할 것은 아니지만 연습삼아 MVP패턴도 적용시켜 보았습니다.
